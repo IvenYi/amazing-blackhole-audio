@@ -1,0 +1,11 @@
+export { default as BlackHole } from './components/BlackHole';
+export type { BlackHoleProps, BlackHoleHandle } from './components/BlackHole';
+export { default as RecordingBlackHole } from './components/RecordingBlackHole';
+export type { RecordingBlackHoleProps, RecordingVisualState } from './components/RecordingBlackHole';
+export { default as RecorderBlackHole } from './examples/RecorderBlackHole';
+export type { RecorderBlackHoleProps } from './examples/RecorderBlackHole';
+export { BLACK_HOLE_PRESETS, getBlackHolePreset } from './presets';
+export type { BlackHolePresetName, BlackHoleVisualPreset } from './presets';
+export { RECORDING_VISUAL_CONFIG } from './recording-visual-config';
+export type { RecorderVisualConfig } from './recording-visual-config';
+export * from './audio';

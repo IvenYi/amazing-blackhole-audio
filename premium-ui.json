@@ -1,0 +1,5 @@
+{
+  "profile": "component-showcase",
+  "sourceRoots": ["src"],
+  "ownership": { "Select/Listbox": "native" }
+}

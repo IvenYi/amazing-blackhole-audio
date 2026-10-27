@@ -1,0 +1,10 @@
+node_modules/
+dist/
+work/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+premium-audit.json
