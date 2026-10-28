@@ -1,5 +1,7 @@
 # Black Hole
 
+> V1 已保存；V2 光丝流动探索提供 `/flow-compare.html` 实时对照。进展与边界见 [FILAMENT-EXPLORATION.md](FILAMENT-EXPLORATION.md)。
+
 > 声渊设计稿还原分支：新增 `/luminous.html` 交互预览与 `/comparison.html` 并排对照。实现方式、限制及验证见 [LUMINOUS-DESIGN.md](LUMINOUS-DESIGN.md)。原版入口和声音 API 保持独立。
 
 本轮增加声音反馈 Demo：运行 `npm run dev` 打开本地地址，先点击 **运行声音测试**，再比较 **轻柔 / 平衡 / 明显** 三档。测试信号为 8 秒循环、不会外放；也可由你点击 **启用麦克风** 授权实时预览。仅本地分析，不保存或上传声音。录音文件、真实转写和总结服务尚未接入，页面相关状态明确标为演示。

@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { vertexShader } from '../components/black-hole-shaders';
 import { luminousField } from './shaders';
+import { luminousField as rippleField } from './ripple-shader';
+import { prepareFlowMaterial } from './flow-material';
 import homeArt from './artwork/home.png';
 import recordingArt from './artwork/recording.png';
 import playbackArt from './artwork/playback.png';
@@ -11,18 +13,19 @@ import { LUMINOUS_SCENES, type LuminousScene } from './scenes';
 export interface LuminousBlackHoleProps {
   scene?: LuminousScene;
   active?: boolean;
+  motion?: 'ripple' | 'filament';
   /** Fixed shader time for screenshots; never used for normal animation. */
   deterministicTime?: number;
 }
 
 /** Visual-only prototype. No microphone, audio permissions, recording, or storage. */
-export default function LuminousBlackHole({ scene = 'home', active = true, deterministicTime }: LuminousBlackHoleProps) {
+export default function LuminousBlackHole({ scene = 'home', active = true, motion = 'filament', deterministicTime }: LuminousBlackHoleProps) {
   const root = useRef<HTMLDivElement>(null);
-  const settings = useRef({ scene, active, deterministicTime });
+  const settings = useRef({ scene, active, motion, deterministicTime });
   const wake = useRef<() => void>(() => {});
   const [error, setError] = useState(false);
-  settings.current = { scene, active, deterministicTime };
-  useEffect(() => { wake.current(); }, [scene, active, deterministicTime]);
+  settings.current = { scene, active, motion, deterministicTime };
+  useEffect(() => { wake.current(); }, [scene, active, motion, deterministicTime]);
 
   useEffect(() => {
     const element = root.current!;
@@ -50,11 +53,19 @@ export default function LuminousBlackHole({ scene = 'home', active = true, deter
       uEnergy: { value: shape.energy }, uTime: { value: 0 },
       uHome: { value: null as THREE.Texture | null }, uRecording: { value: null as THREE.Texture | null },
       uPlayback: { value: null as THREE.Texture | null }, uDesktop: { value: null as THREE.Texture | null },
+      uFlowHome: { value: null as THREE.Texture | null }, uFlowRecording: { value: null as THREE.Texture | null },
+      uFlowPlayback: { value: null as THREE.Texture | null }, uFlowDesktop: { value: null as THREE.Texture | null },
     };
     const fieldMaterial = new THREE.RawShaderMaterial({
       glslVersion: THREE.GLSL3, vertexShader, fragmentShader: luminousField, uniforms,
       depthWrite: false, depthTest: false, blending: THREE.NoBlending,
     });
+    const rippleMaterial = new THREE.RawShaderMaterial({
+      glslVersion: THREE.GLSL3, vertexShader, fragmentShader: rippleField, uniforms,
+      depthWrite: false, depthTest: false, blending: THREE.NoBlending,
+    });
+    let originalArt: THREE.Texture[]=[];
+    let movingArt: THREE.Texture[]=[];
     const triangle = new THREE.Mesh(geometry, fieldMaterial);
     triangle.frustumCulled = false;
     graph.add(triangle);
@@ -99,6 +110,10 @@ export default function LuminousBlackHole({ scene = 'home', active = true, deter
       uniforms.uTime.value=fixed?settings.current.deterministicTime!:elapsed;
       uniforms.uWeights.value.set(weights[0],weights[1],weights[2],weights[3]);
       uniforms.uEnergy.value=shape.energy;
+      const isRipple=settings.current.motion==='ripple';
+      const art=isRipple?originalArt:movingArt;
+      [uniforms.uHome.value,uniforms.uRecording.value,uniforms.uPlayback.value,uniforms.uDesktop.value]=art;
+      triangle.material=isRipple?rippleMaterial:fieldMaterial;
       renderer.render(graph,camera);
       frameCount++;
       if(frameCount===1 || frameCount%60===0 || reduced.matches || fixed || !settings.current.active) {
@@ -127,14 +142,18 @@ export default function LuminousBlackHole({ scene = 'home', active = true, deter
     }))).then(loaded=>{
       if(disposed) return;
       for(const texture of loaded) { texture.minFilter=THREE.LinearFilter; texture.magFilter=THREE.LinearFilter; texture.generateMipmaps=false; }
-      [uniforms.uHome.value,uniforms.uRecording.value,uniforms.uPlayback.value,uniforms.uDesktop.value]=loaded;
+      originalArt=loaded;
+      const prepared=loaded.map(prepareFlowMaterial);
+      movingArt=prepared.map(item=>item.art);
+      textures.push(...movingArt,...prepared.map(item=>item.flow));
+      [uniforms.uFlowHome.value,uniforms.uFlowRecording.value,uniforms.uFlowPlayback.value,uniforms.uFlowDesktop.value]=prepared.map(item=>item.flow);
       ready=true; request();
     }).catch(()=>{if(!disposed)setError(true);});
     return () => {
       disposed=true; suspend(); wake.current=() => {};
       observer.disconnect(); intersection.disconnect(); document.removeEventListener('visibilitychange',onVisibility);
       reduced.removeEventListener('change',onMotion); canvas.removeEventListener('webglcontextlost',onLost); canvas.removeEventListener('webglcontextrestored',onRestore);
-      geometry.dispose(); fieldMaterial.dispose();
+      geometry.dispose(); fieldMaterial.dispose(); rippleMaterial.dispose();
       textures.forEach(texture=>texture.dispose()); renderer.dispose(); canvas.remove();
     };
   }, []);

@@ -1,5 +1,7 @@
 # 声渊：设计稿还原预览
 
+> 本文记录 V1。V1 已保存为 `shengyuan-luminous-v1-ripple`；当前 V2 探索的实现、限制与路线讨论见 [FILAMENT-EXPLORATION.md](FILAMENT-EXPLORATION.md)。
+
 分支：`codex/shengyuan-blackhole-design`。原版 `src/components/BlackHole.tsx`、声音映射和 `/` 演示保留。本分支新入口为 `/luminous.html`，逐项对照入口为 `/comparison.html`。
 
 ## 本轮依据

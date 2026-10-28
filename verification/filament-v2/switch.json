@@ -1,0 +1,15 @@
+{
+  "checks": [
+    {
+      "name": "V1 · 波纹",
+      "selected": true,
+      "sameCanvas": true
+    },
+    {
+      "name": "V2 · 光丝流动",
+      "selected": true,
+      "sameCanvas": true
+    }
+  ],
+  "errors": []
+}

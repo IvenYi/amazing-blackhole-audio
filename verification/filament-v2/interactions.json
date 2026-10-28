@@ -1,0 +1,30 @@
+[
+  {
+    "name": "tap pauses",
+    "passed": true
+  },
+  {
+    "name": "tap resumes",
+    "passed": true
+  },
+  {
+    "name": "hold returns home",
+    "passed": true
+  },
+  {
+    "name": "seek control works",
+    "passed": true
+  },
+  {
+    "name": "note editor works",
+    "passed": true
+  },
+  {
+    "name": "frozen canvas still responds to scene switch",
+    "passed": true
+  },
+  {
+    "name": "WebGL restores and continues rendering",
+    "passed": true
+  }
+]

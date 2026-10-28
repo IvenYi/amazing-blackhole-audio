@@ -28,6 +28,7 @@ function App() {
   const [scene, setScene] = useState<LuminousScene>(initial in LUMINOUS_SCENES ? initial : 'home');
   const [layout, setLayout] = useState(params.get('layout') ?? 'phone');
   const [running, setRunning] = useState(true);
+  const [motion,setMotion]=useState<'ripple'|'filament'>(params.get('motion')==='ripple'?'ripple':'filament');
   const [progress, setProgress] = useState(272);
   const [playing, setPlaying] = useState(false);
   const [rate, setRate] = useState(1);
@@ -53,10 +54,10 @@ function App() {
   const start = <button className="primary" aria-label="开始录音演示" onClick={() => changeScene('recording')}><Icon name="mic"/>开始录音</button>;
   const search = <label className="search-box"><Icon name="search"/><input aria-label="搜索示例记录" placeholder="搜索记录" value={query} onChange={e => setQuery(e.target.value)}/></label>;
   return <main className={`lab ${params.has('embed') ? 'embedded' : ''}`}>
-    <header className="lab-header"><a className="lab-brand" href="/luminous.html">声渊 <span>设计还原预览</span></a><p>设计稿材质 · WebGL 流动 · 示例内容</p><a href="/">原版对照 ↗</a></header>
+    <header className="lab-header"><a className="lab-brand" href="/luminous.html">声渊 <span>光流探索 V2</span></a><p>设计稿材质 · 光丝输运 · 示例内容</p><a href="/">原版对照 ↗</a></header>
     <nav className="scene-nav" aria-label="黑洞形态">{(Object.keys(names) as LuminousScene[]).map(key => <button key={key} aria-pressed={scene === key} onClick={() => changeScene(key)}>{names[key]}</button>)}</nav>
     <div className={`stage ${layout} scene-${scene}`}>
-      <div className="art"><LuminousBlackHole scene={scene} active={running} deterministicTime={fixed}/></div>
+      <div className="art"><LuminousBlackHole scene={scene} active={running} motion={motion} deterministicTime={fixed}/></div>
       {layout !== 'canvas' && <>
         <div className="device-status" aria-hidden="true"><span>9:41</span><span className="device-indicators">◒ ◢ ▰</span></div>
         <header className={`app-header ${isHome ? 'is-home' : ''} ${isPlayback ? 'is-playback' : ''}`}>
@@ -83,8 +84,8 @@ function App() {
         <div className="home-indicator" aria-hidden="true"/>
       </>}
     </div>
-    <footer className="lab-controls"><div aria-label="预览尺寸">{[['phone', '手机'], ['wide', '桌面'], ['canvas', '纯画面']].map(([key, label]) => <button key={key} aria-pressed={layout === key} onClick={() => changeLayout(key)}>{label}</button>)}</div><button aria-pressed={!running} onClick={() => setRunning(!running)}>{running ? '冻结画面' : '继续动画'}</button></footer>
-    <p className="lab-note">固定视角的设计稿材质 + 实时流动。60Hz 上限 / DPR 上限 2。此页未连接录音、声音反馈和文件操作。</p>
+    <footer className="lab-controls"><div aria-label="动效版本">{([['ripple','V1 · 波纹'],['filament','V2 · 光丝流动']] as const).map(([key,label])=><button key={key} aria-pressed={motion===key} onClick={()=>{setMotion(key);const url=new URL(location.href);url.searchParams.set('motion',key);history.replaceState(null,'',url);}}>{label}</button>)}</div><div aria-label="预览尺寸">{[['phone', '手机'], ['wide', '桌面'], ['canvas', '纯画面']].map(([key, label]) => <button key={key} aria-pressed={layout === key} onClick={() => changeLayout(key)}>{label}</button>)}</div><button aria-pressed={!running} onClick={() => setRunning(!running)}>{running ? '冻结画面' : '继续动画'}</button></footer>
+    <p className="lab-note">V1 保留波纹输运，V2 沿光丝方向输送图像细节。60Hz 上限 / DPR 上限 2。此页未连接录音、声音反馈和文件操作。</p>
   </main>;
 }
 createRoot(document.getElementById('root')!).render(<App/>);

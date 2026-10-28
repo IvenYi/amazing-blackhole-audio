@@ -17,3 +17,5 @@
 
 .phone .home-content,.phone .record-title,.phone .playback-content{left:18px;right:18px}
 .phone .record-title{top:95px}.phone .playback-content{top:61.1%}.phone .times{margin-top:10px}.phone .transport{margin-top:9px}.phone .playback-content .orbit-button{width:80px;height:80px}.phone .note{margin-top:33px}.phone .sample-caption{bottom:50px}.phone .home-indicator{bottom:29px}
+
+@media(max-width:600px){.lab-controls{flex-wrap:wrap;gap:12px}.lab-controls>div:first-child{flex-basis:100%;justify-content:center}}
