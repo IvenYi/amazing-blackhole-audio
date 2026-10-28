@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { vertexShader } from '../components/black-hole-shaders';
-import { luminousField } from './shaders';
 import { luminousField as rippleField } from './ripple-shader';
 import { prepareFlowMaterial } from './flow-material';
 import { ContinuousFlow } from './continuous-flow';
@@ -15,7 +14,7 @@ import { LUMINOUS_SCENES, type LuminousScene } from './scenes';
 export interface LuminousBlackHoleProps {
   scene?: LuminousScene;
   active?: boolean;
-  motion?: 'ripple' | 'filament' | 'continuous';
+  motion?: 'ripple' | 'continuous';
   /** Fixed shader time for screenshots; never used for normal animation. */
   deterministicTime?: number;
 }
@@ -58,10 +57,6 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       uFlowHome: { value: null as THREE.Texture | null }, uFlowRecording: { value: null as THREE.Texture | null },
       uFlowPlayback: { value: null as THREE.Texture | null }, uFlowDesktop: { value: null as THREE.Texture | null },
     };
-    const fieldMaterial = new THREE.RawShaderMaterial({
-      glslVersion: THREE.GLSL3, vertexShader, fragmentShader: luminousField, uniforms,
-      depthWrite: false, depthTest: false, blending: THREE.NoBlending,
-    });
     const rippleMaterial = new THREE.RawShaderMaterial({
       glslVersion: THREE.GLSL3, vertexShader, fragmentShader: rippleField, uniforms,
       depthWrite: false, depthTest: false, blending: THREE.NoBlending,
@@ -76,7 +71,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
     let continuous:ContinuousFlow|undefined;
     let originalArt: THREE.Texture[]=[];
     let movingArt: THREE.Texture[]=[];
-    const triangle = new THREE.Mesh(geometry, fieldMaterial);
+    const triangle = new THREE.Mesh(geometry, continuousMaterial);
     triangle.frustumCulled = false;
     graph.add(triangle);
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -134,7 +129,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
         const images=continuous.update(renderer,indices,uniforms.uTime.value);
         [continuousUniforms.uFlowHome.value,continuousUniforms.uFlowRecording.value,continuousUniforms.uFlowPlayback.value,continuousUniforms.uFlowDesktop.value]=images;
       } else continuous?.release();
-      triangle.material=isRipple?rippleMaterial:isContinuous?continuousMaterial:fieldMaterial;
+      triangle.material=isRipple?rippleMaterial:continuousMaterial;
       renderer.render(graph,camera);
       frameCount++;
       if(frameCount===1 || frameCount%60===0 || reduced.matches || fixed || !settings.current.active) {
@@ -176,7 +171,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       disposed=true; suspend(); wake.current=() => {};
       observer.disconnect(); intersection.disconnect(); document.removeEventListener('visibilitychange',onVisibility);
       reduced.removeEventListener('change',onMotion); canvas.removeEventListener('webglcontextlost',onLost); canvas.removeEventListener('webglcontextrestored',onRestore);
-      continuous?.dispose();geometry.dispose(); fieldMaterial.dispose(); rippleMaterial.dispose();continuousMaterial.dispose();
+      continuous?.dispose();geometry.dispose(); rippleMaterial.dispose();continuousMaterial.dispose();
       textures.forEach(texture=>texture.dispose()); renderer.dispose(); canvas.remove();
     };
   }, []);

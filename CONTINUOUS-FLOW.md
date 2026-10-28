@@ -1,10 +1,10 @@
-# V3 持续光流探索
+# V2 持续光流 · 保存版
 
-分支 `codex/shengyuan-continuous-flow`，从已保存的 V2 提交 `a97dc72` 开始。V1 标签 `shengyuan-luminous-v1-ripple` 与 V2 分支保持不变。
+用户于 2026-10-28 将原 V3（提交 `503eb46`）正式改名为 V2，弃用此前的短周期图像输运版 V2。原 V2 的实现、预览入口和专用证据已删除。当前保存分支为 `codex/shengyuan-luminous-v2`，标签为 `shengyuan-luminous-v2`。
 
 ## 当前实现
 
-用户反馈首个 V3 几乎看不出运动。该初稿持续输运并补充同一张图像，逐渐趋于稳定，而且会损失细丝。该方案已撤掉，当前代码不包含图像反馈累积或双相重置。
+用户反馈历史初稿 几乎看不出运动。该初稿持续输运并补充同一张图像，逐渐趋于稳定，而且会损失细丝。该方案已撤掉，当前代码不包含图像反馈累积或双相重置。
 
 当前从设计图的纹理方向提取流场，在流场中生成向内运动的轨迹。亮丝和宽烟尾沿轨迹行进，每条轨迹有独立的起点、速度、间隔和长尾；接近暗核时终止。轨迹的径向速度受约束，不能向外逃离。局部有亚像素卷曲，没有相机运动或整体光带摇摆。
 
@@ -16,17 +16,19 @@
 
 ## 预览
 
-- `/luminous.html?scene=home&motion=continuous`：V3 首页。
-- `/luminous.html?scene=recording&motion=continuous`：V3 录音。
-- `/luminous.html?scene=playback&motion=continuous`：V3 回放。
-- `motion=ripple` / `motion=filament`：V1 / V2 原版本。
+- `/luminous.html?scene=home&motion=continuous`：V2 首页。
+- `/luminous.html?scene=recording&motion=continuous`：V2 录音。
+- `/luminous.html?scene=playback&motion=continuous`：V2 回放。
+- `motion=ripple`：V1 波纹版。旧的 `filament` 模式已删除。
 
-默认打开 V3，也可在页尾切换。`time=` 是可复现的固定 shader 时间；正常使用连续时钟。冻结、减少动态效果、后台挂起和 context 恢复沿用同一组件生命周期。
+默认打开 V2，也可在页尾切换。`time=` 是可复现的固定 shader 时间；正常使用连续时钟。冻结、减少动态效果、后台挂起和 context 恢复沿用同一组件生命周期。
 
-维持 60Hz 绘制上限、DPR 上限 2 和源素材分辨率；没有用拉伸或模糊掩盖细节。新增发光 pass 与路径几何会增加 GPU 工作量，尚未在小米 14 上验证本版帧率、温升或功耗。只为可见的素材分配发光目标，退出 V3 即释放目标；几何在组件卸载时释放。
+维持 60Hz 绘制上限、DPR 上限 2 和源素材分辨率；没有用拉伸或模糊掩盖细节。新增发光 pass 与路径几何会增加 GPU 工作量，尚未在小米 14 上验证本版帧率、温升或功耗。只为可见的素材分配发光目标，退出 V2 即释放目标；几何在组件卸载时释放。
 
 这次仅涉及视觉工程，未连接录音、声音反馈或文件操作，未更新 Android APK。
 
 ## 验证记录
 
-构建、20 项上游单测、35 项浏览器检查与一分钟动态样片的证据，见 [本版验证说明](verification/continuous-v3/RESULTS.md)。像素变化只用于检查持续运行，不代替美学判断或手机性能验收。
+构建、20 项上游单测、35 项浏览器检查与一分钟动态样片的证据，见 [改名前的原始验证记录](verification/continuous-v3/RESULTS.md)。像素变化只用于检查持续运行，不代替美学判断或手机性能验收。
+
+改名与删除旧模式后的构建及固定时间画面一致性检查见 `verification/luminous-v2/`。原始历史验证中的 V3 指当前 V2，历史 V2 指已弃用版本，不改写旧测试结果。

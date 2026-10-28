@@ -24,15 +24,6 @@ function blur(input: Float32Array, width: number, height: number) {
 }
 
 
-function emissionNoise(x:number,y:number) {
-  const hash=(a:number,b:number)=>{const value=Math.sin(a*127.1+b*311.7)*43758.5453;return value-Math.floor(value);};
-  const ix=Math.floor(x),iy=Math.floor(y),fx=x-ix,fy=y-iy;
-  const sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy);
-  const lower=hash(ix,iy)*(1-sx)+hash(ix+1,iy)*sx;
-  const upper=hash(ix,iy+1)*(1-sx)+hash(ix+1,iy+1)*sx;
-  return lower*(1-sy)+upper*sy;
-}
-
 /** Derive a continuous material velocity field from the image's strand orientation. */
 export function prepareFlowMaterial(source: THREE.Texture, index: number) {
   const image=source.image as HTMLImageElement;
@@ -92,7 +83,7 @@ export function prepareFlowMaterial(source: THREE.Texture, index: number) {
     const i=y*width+x,out=((height-1-y)*width+x)*4;
     vectors[out]=Math.round(Math.min(1,Math.max(0,.5+smoothX[i]/(2*velocityRange)))*255);
     vectors[out+1]=Math.round(Math.min(1,Math.max(0,.5+smoothY[i]/(2*velocityRange)))*255);
-    vectors[out+2]=Math.round((emissionNoise(x/18,y/18)*.7+emissionNoise(x/7+9,y/7+17)*.3)*255);vectors[out+3]=255;
+    vectors[out+2]=0;vectors[out+3]=255;
   }
   const flow=new THREE.DataTexture(vectors,width,height,THREE.RGBAFormat,THREE.UnsignedByteType);
   flow.minFilter=flow.magFilter=THREE.LinearFilter;flow.generateMipmaps=false;flow.needsUpdate=true;

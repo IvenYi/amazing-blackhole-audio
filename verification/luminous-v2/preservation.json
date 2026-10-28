@@ -1,0 +1,7 @@
+{
+  "same_viewport": true,
+  "same_stage_pixels": true,
+  "fixed_time": 12,
+  "scene": "recording",
+  "scope": "Desktop composition, same local browser/GPU. Renumbering and removing the obsolete mode must preserve the saved current version."
+}

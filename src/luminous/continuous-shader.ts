@@ -1,4 +1,4 @@
-/** V3: moving filaments and smoke wakes illuminate the same dark horizon. */
+/** V2: moving filaments and smoke wakes illuminate the same dark horizon. */
 export const luminousField = `
 precision highp float;
 uniform sampler2D uHome;

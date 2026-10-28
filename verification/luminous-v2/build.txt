@@ -1,0 +1,27 @@
+
+> black-hole-reconstruction@1.0.0 build:luminous
+> tsc --noEmit && vite build --config vite.luminous.config.ts
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 33 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-luminous/luminous.html                      0.54 kB │ gzip:   0.38 kB
+dist-luminous/comparison.html                    2.42 kB │ gzip:   1.39 kB
+dist-luminous/flow-compare.html                  2.54 kB │ gzip:   1.46 kB
+dist-luminous/assets/home-Bl2DX46G.png       1,347.09 kB
+dist-luminous/assets/desktop-BfaPhwaC.png    1,441.20 kB
+dist-luminous/assets/playback-BoXaYNY2.png   1,525.90 kB
+dist-luminous/assets/recording-Rr97MBgd.png  1,526.08 kB
+dist-luminous/assets/luminous-Dtu1suYG.css      12.02 kB │ gzip:   3.37 kB
+dist-luminous/assets/desktop-DF9HE-zW.js         0.92 kB │ gzip:   0.50 kB
+dist-luminous/assets/comparison-sswq6LN_.js      1.01 kB │ gzip:   0.60 kB
+dist-luminous/assets/luminous-eodTicKX.js      745.78 kB │ gzip: 206.04 kB
+
+✓ built in 156ms
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
