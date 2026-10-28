@@ -1,0 +1,10 @@
+{
+  "same_saved_v2_pixels": true,
+  "size": [
+    2940,
+    1554
+  ],
+  "fixed_time": 12,
+  "scene": "recording",
+  "scope": "Same local browser/GPU. The saved V2 composition and rendering remain unchanged."
+}

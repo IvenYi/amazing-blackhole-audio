@@ -1,0 +1,30 @@
+{
+  "samples": 64,
+  "interval_seconds": 1,
+  "native_roi": [
+    0,
+    180,
+    786,
+    1080
+  ],
+  "adjacent_grayscale_pixel_difference": {
+    "min": 1.1992026567459106,
+    "mean": 1.5478571653366089,
+    "max": 2.0449137687683105
+  },
+  "coarse_light_field_difference": {
+    "min": 0.6581934094429016,
+    "mean": 0.9316575527191162,
+    "max": 1.258460521697998
+  },
+  "temporal_std_mean": {
+    "core": 0.024513959884643555,
+    "rim": 6.542215824127197
+  },
+  "checks": {
+    "changes_each_sampled_second": true,
+    "coarse_light_field_also_changes": true,
+    "rim_varies": true
+  },
+  "limits": "These checks confirm temporal changes, including low-frequency light, and varying rim light. They do not prove material trajectories, fluid physics, cinematic quality, presented FPS or Xiaomi performance."
+}

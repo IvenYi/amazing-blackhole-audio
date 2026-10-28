@@ -120,7 +120,7 @@ export class ContinuousFlow {
   private geometries=new Map<number,THREE.BufferGeometry>();
   private targets=new Map<number,THREE.WebGLRenderTarget>();
   private empty=new THREE.BufferGeometry();
-  constructor(private sources:Source[]) {
+  constructor(private sources:Source[],private mipmaps=false) {
     this.material=new THREE.RawShaderMaterial({
       glslVersion:THREE.GLSL3,vertexShader:vertex,fragmentShader:fragment,
       depthTest:false,depthWrite:false,transparent:true,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,
@@ -139,6 +139,7 @@ export class ContinuousFlow {
       let target=this.targets.get(index);
       if(!target) {
         target=new THREE.WebGLRenderTarget(image.width,image.height,{type:THREE.HalfFloatType,minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,depthBuffer:false,stencilBuffer:false});
+        if(this.mipmaps) {target.texture.generateMipmaps=true;target.texture.minFilter=THREE.LinearMipmapLinearFilter;}
         this.targets.set(index,target);
       }
       this.mesh.geometry=geometry;

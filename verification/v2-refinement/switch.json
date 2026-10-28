@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "name": "V1 · 波纹 selection",
+      "passed": true
+    },
+    {
+      "name": "V1 · 波纹 renderer reused",
+      "passed": true
+    },
+    {
+      "name": "V1 · 波纹 rendered",
+      "passed": true
+    },
+    {
+      "name": "V2 · 已保存 selection",
+      "passed": true
+    },
+    {
+      "name": "V2 · 已保存 renderer reused",
+      "passed": true
+    },
+    {
+      "name": "V2 · 已保存 rendered",
+      "passed": true
+    },
+    {
+      "name": "V2.1 · 流动调整 selection",
+      "passed": true
+    },
+    {
+      "name": "V2.1 · 流动调整 renderer reused",
+      "passed": true
+    },
+    {
+      "name": "V2.1 · 流动调整 rendered",
+      "passed": true
+    },
+    {
+      "name": "no shader errors across modes",
+      "passed": true
+    }
+  ],
+  "errors": []
+}
