@@ -1,0 +1,32 @@
+
+> black-hole-reconstruction@1.0.0 test
+> tsc --ignoreConfig --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --skipLibCheck --rootDir src --outDir work/audio-test-build src/audio/index.ts src/presets.ts src/recording-visual-config.ts --jsx react-jsx && node --test tests/audio.test.ts tests/presets.test.ts
+
+✔ known PCM full-scale sine, DC, silence, clipping and corrupt samples (1.7905ms)
+✔ FFT dB bins yield linear amplitude and invalid bins yield silence (0.484ms)
+✔ store uses receipt clock, missing bands are zero, rejects disorder/future-invalid values (0.165083ms)
+✔ silent identity is exact; normalization is monotonic and dBFS-gated (0.192ms)
+✔ attack/release envelopes agree at 30, 60 and 144 fps for equal elapsed time (0.358708ms)
+✔ stale/future frames decay; background gaps cannot retain loudness or emit a restart impulse (0.093875ms)
+✔ balanced visual response is bounded and transient impulses respect 600ms cooldown (0.194541ms)
+✔ constructor and configure resolve the same numeric options, zero overrides and invalid values (0.280292ms)
+✔ changing glow during input preserves envelopes, clock and existing impulse cooldown (0.10925ms)
+✔ changing release preserves the current envelope and changes only its subsequent decay (0.093958ms)
+✔ runtime zero visual overrides preserve the active level and configure() restores default options (0.070458ms)
+✔ borrowed node uses a private analyser branch, reuses sample buffers and never closes the host context (0.592542ms)
+✔ suspended context cancels sampling; borrowed track ending is observed without stopping host tracks (0.260916ms)
+✔ concurrent mic starts share one request; stop releases a permission result that arrives late (0.191417ms)
+✔ permission rejection is reported and a later explicit mic retry can succeed (0.320584ms)
+✔ mic owns only its newly obtained stream when using an existing host context (0.064917ms)
+✔ switching from coloured or unwarped styles to Classic clears previous style state (1.645625ms)
+✔ preset overrides win without contaminating later calls or returned colour arrays (0.058291ms)
+✔ visual presets do not overwrite host state, audio input, dimensions or quality (0.075ms)
+✔ application handoff configuration retains Classic and the accepted balanced audio mapping (0.559833ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 101.621416

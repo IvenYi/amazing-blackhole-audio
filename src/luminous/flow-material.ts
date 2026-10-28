@@ -96,5 +96,5 @@ export function prepareFlowMaterial(source: THREE.Texture, index: number) {
   }
   const flow=new THREE.DataTexture(vectors,width,height,THREE.RGBAFormat,THREE.UnsignedByteType);
   flow.minFilter=flow.magFilter=THREE.LinearFilter;flow.generateMipmaps=false;flow.needsUpdate=true;
-  return {art,flow};
+  return {art,flow,core:spec.core,radius:spec.radius,crop:spec.crop};
 }

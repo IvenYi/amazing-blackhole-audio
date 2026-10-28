@@ -1,0 +1,43 @@
+{
+  "source": "luminous-continuous-v3-dpr2.mp4",
+  "samples": 64,
+  "sample_interval_seconds": 1,
+  "roi": [
+    0,
+    180,
+    786,
+    1080
+  ],
+  "adjacent_mean_absolute_pixel_change_0_255": {
+    "min": 3.7287893295288086,
+    "mean": 4.412860870361328,
+    "max": 5.552545547485352
+  },
+  "temporal_residual_correlation_by_lag_seconds": {
+    "2": {
+      "mean": 0.049960569228841775,
+      "max": 0.2821613848209381
+    },
+    "5": {
+      "mean": -0.014797435777451275,
+      "max": 0.19742809236049652
+    },
+    "9": {
+      "mean": 0.07291415173306384,
+      "max": 0.2184859961271286
+    },
+    "15": {
+      "mean": 0.10670525940344194,
+      "max": 0.33130189776420593
+    },
+    "30": {
+      "mean": 0.07463063284590402,
+      "max": 0.19758982956409454
+    }
+  },
+  "checks": {
+    "every_sampled_second_has_motion": true,
+    "all_64_samples_differ": true
+  },
+  "limits": "Pixel changes do not prove cinematic quality, optical-flow direction, non-repetition at all times, presented FPS, or Xiaomi performance."
+}

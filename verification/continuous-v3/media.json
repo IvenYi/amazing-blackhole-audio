@@ -1,0 +1,15 @@
+{
+  "luminous-continuous-v3-dpr2.mp4": {
+    "bytes": 76109412,
+    "sha256": "bd97236a099f138dfc9e724bfd6e0cfa05544d6076b9e8afd08713429395dfb6"
+  },
+  "luminous-continuous-v3-detail.mp4": {
+    "bytes": 73364912,
+    "sha256": "d477c40641f13d19c8c870c2297ebba015461bad2b9943afceab36234427926b"
+  },
+  "luminous-continuous-v3-preview.mp4": {
+    "bytes": 13122351,
+    "sha256": "90b0a8cac502634d01595f712841056ac60e01a6c8c550e2c1e88b4fffd5f25a"
+  },
+  "avfoundation_observation": "duration 66.431; nominal source fps 45.06878; 64 exact-tolerance frame samples"
+}

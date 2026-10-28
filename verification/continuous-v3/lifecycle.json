@@ -1,0 +1,73 @@
+{
+  "checks": [
+    {
+      "name": "one WebGL canvas",
+      "passed": true
+    },
+    {
+      "name": "live animation changes rendered pixels",
+      "passed": true
+    },
+    {
+      "name": "录音聚拢 reuses the renderer",
+      "passed": true
+    },
+    {
+      "name": "录音聚拢 state selected",
+      "passed": true
+    },
+    {
+      "name": "暂停收敛 reuses the renderer",
+      "passed": true
+    },
+    {
+      "name": "暂停收敛 state selected",
+      "passed": true
+    },
+    {
+      "name": "回放环流 reuses the renderer",
+      "passed": true
+    },
+    {
+      "name": "回放环流 state selected",
+      "passed": true
+    },
+    {
+      "name": "首页视界 reuses the renderer",
+      "passed": true
+    },
+    {
+      "name": "首页视界 state selected",
+      "passed": true
+    },
+    {
+      "name": "freeze stops visible movement",
+      "passed": true
+    },
+    {
+      "name": "reduced motion produces a static frame",
+      "passed": true
+    },
+    {
+      "name": "reduced motion still responds to state changes",
+      "passed": true
+    },
+    {
+      "name": "mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop layout uses the same canvas",
+      "passed": true
+    },
+    {
+      "name": "desktop has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "no browser or shader errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

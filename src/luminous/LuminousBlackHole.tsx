@@ -4,6 +4,8 @@ import { vertexShader } from '../components/black-hole-shaders';
 import { luminousField } from './shaders';
 import { luminousField as rippleField } from './ripple-shader';
 import { prepareFlowMaterial } from './flow-material';
+import { ContinuousFlow } from './continuous-flow';
+import { luminousField as continuousField } from './continuous-shader';
 import homeArt from './artwork/home.png';
 import recordingArt from './artwork/recording.png';
 import playbackArt from './artwork/playback.png';
@@ -13,13 +15,13 @@ import { LUMINOUS_SCENES, type LuminousScene } from './scenes';
 export interface LuminousBlackHoleProps {
   scene?: LuminousScene;
   active?: boolean;
-  motion?: 'ripple' | 'filament';
+  motion?: 'ripple' | 'filament' | 'continuous';
   /** Fixed shader time for screenshots; never used for normal animation. */
   deterministicTime?: number;
 }
 
 /** Visual-only prototype. No microphone, audio permissions, recording, or storage. */
-export default function LuminousBlackHole({ scene = 'home', active = true, motion = 'filament', deterministicTime }: LuminousBlackHoleProps) {
+export default function LuminousBlackHole({ scene = 'home', active = true, motion = 'continuous', deterministicTime }: LuminousBlackHoleProps) {
   const root = useRef<HTMLDivElement>(null);
   const settings = useRef({ scene, active, motion, deterministicTime });
   const wake = useRef<() => void>(() => {});
@@ -64,6 +66,14 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       glslVersion: THREE.GLSL3, vertexShader, fragmentShader: rippleField, uniforms,
       depthWrite: false, depthTest: false, blending: THREE.NoBlending,
     });
+    const continuousUniforms={...uniforms,
+      uFlowHome:{value:null as THREE.Texture|null},uFlowRecording:{value:null as THREE.Texture|null},
+      uFlowPlayback:{value:null as THREE.Texture|null},uFlowDesktop:{value:null as THREE.Texture|null}};
+    const continuousMaterial=new THREE.RawShaderMaterial({
+      glslVersion:THREE.GLSL3,vertexShader,fragmentShader:continuousField,uniforms:continuousUniforms,
+      depthWrite:false,depthTest:false,blending:THREE.NoBlending,
+    });
+    let continuous:ContinuousFlow|undefined;
     let originalArt: THREE.Texture[]=[];
     let movingArt: THREE.Texture[]=[];
     const triangle = new THREE.Mesh(geometry, fieldMaterial);
@@ -111,20 +121,32 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       uniforms.uWeights.value.set(weights[0],weights[1],weights[2],weights[3]);
       uniforms.uEnergy.value=shape.energy;
       const isRipple=settings.current.motion==='ripple';
+      const isContinuous=settings.current.motion==='continuous';
       const art=isRipple?originalArt:movingArt;
       [uniforms.uHome.value,uniforms.uRecording.value,uniforms.uPlayback.value,uniforms.uDesktop.value]=art;
-      triangle.material=isRipple?rippleMaterial:fieldMaterial;
+      if(isContinuous && continuous) {
+        const indices:number[]=[];
+        const wide=width/height>1.05;
+        if(wide && weights[0]+weights[3]>.001) indices.push(3);
+        if(!wide && weights[0]>.001) indices.push(0);
+        if(weights[1]+weights[2]>.001) indices.push(1);
+        if(!wide && weights[3]>.001) indices.push(2);
+        const images=continuous.update(renderer,indices,uniforms.uTime.value);
+        [continuousUniforms.uFlowHome.value,continuousUniforms.uFlowRecording.value,continuousUniforms.uFlowPlayback.value,continuousUniforms.uFlowDesktop.value]=images;
+      } else continuous?.release();
+      triangle.material=isRipple?rippleMaterial:isContinuous?continuousMaterial:fieldMaterial;
       renderer.render(graph,camera);
       frameCount++;
       if(frameCount===1 || frameCount%60===0 || reduced.matches || fixed || !settings.current.active) {
         element.dataset.frames=String(frameCount); element.dataset.scene=settings.current.scene;
         element.dataset.resolution=`${canvas.width}x${canvas.height}`;
+        element.dataset.motion=settings.current.motion;element.dataset.time=String(uniforms.uTime.value);
       }
       if (settings.current.active && ((!fixed && !reduced.matches) || moving)) request();
     };
     const suspend = () => { cancelAnimationFrame(raf); raf=0; last=0; };
     const onVisibility = () => { suspend(); request(); };
-    const onLost = (event: Event) => { event.preventDefault(); lost=true; suspend(); };
+    const onLost = (event: Event) => { event.preventDefault(); lost=true; suspend();continuous?.release(); };
     const onRestore = () => { lost=false; request(); };
     const onMotion = () => { suspend(); request(); };
     const observer = new ResizeObserver(() => { resize(); request(); });
@@ -144,6 +166,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       for(const texture of loaded) { texture.minFilter=THREE.LinearFilter; texture.magFilter=THREE.LinearFilter; texture.generateMipmaps=false; }
       originalArt=loaded;
       const prepared=loaded.map(prepareFlowMaterial);
+      continuous=new ContinuousFlow(prepared);
       movingArt=prepared.map(item=>item.art);
       textures.push(...movingArt,...prepared.map(item=>item.flow));
       [uniforms.uFlowHome.value,uniforms.uFlowRecording.value,uniforms.uFlowPlayback.value,uniforms.uFlowDesktop.value]=prepared.map(item=>item.flow);
@@ -153,7 +176,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       disposed=true; suspend(); wake.current=() => {};
       observer.disconnect(); intersection.disconnect(); document.removeEventListener('visibilitychange',onVisibility);
       reduced.removeEventListener('change',onMotion); canvas.removeEventListener('webglcontextlost',onLost); canvas.removeEventListener('webglcontextrestored',onRestore);
-      geometry.dispose(); fieldMaterial.dispose(); rippleMaterial.dispose();
+      continuous?.dispose();geometry.dispose(); fieldMaterial.dispose(); rippleMaterial.dispose();continuousMaterial.dispose();
       textures.forEach(texture=>texture.dispose()); renderer.dispose(); canvas.remove();
     };
   }, []);

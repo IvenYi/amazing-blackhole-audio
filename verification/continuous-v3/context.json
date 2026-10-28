@@ -1,0 +1,9 @@
+{
+  "checks": [
+    {
+      "name": "context loss, restoration, mode switch, scene switch and renderer disposal produce no GL warnings or errors",
+      "passed": true
+    }
+  ],
+  "messages": []
+}
