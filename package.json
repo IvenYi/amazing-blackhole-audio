@@ -9,7 +9,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "tsc --ignoreConfig --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --skipLibCheck --rootDir src --outDir work/audio-test-build src/audio/index.ts src/presets.ts src/recording-visual-config.ts --jsx react-jsx && node --test tests/audio.test.ts tests/presets.test.ts",
-    "check:docs": "node scripts/check-docs.mjs && tsc -p work/doc-check/tsconfig.json"
+    "check:docs": "node scripts/check-docs.mjs && tsc -p work/doc-check/tsconfig.json",
+    "build:luminous": "tsc --noEmit && vite build --config vite.luminous.config.ts"
   },
   "dependencies": {
     "react": "19.3.1",

@@ -1,0 +1,20 @@
+[
+  {
+    "times": [
+      4.49,
+      4.51
+    ],
+    "mean_absolute_rgb_difference_0_255": 0.3484474322037774,
+    "p99_rgb_difference": 4.0,
+    "passed": true
+  },
+  {
+    "times": [
+      8.99,
+      9.01
+    ],
+    "mean_absolute_rgb_difference_0_255": 0.3484451456532675,
+    "p99_rgb_difference": 4.0,
+    "passed": true
+  }
+]

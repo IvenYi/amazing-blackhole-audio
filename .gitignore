@@ -8,3 +8,4 @@ work/
 !.env.example
 *.tsbuildinfo
 premium-audit.json
+dist-luminous/

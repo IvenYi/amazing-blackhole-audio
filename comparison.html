@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>声渊 · 设计稿与运行画面对照</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101012;color:#eee;font:14px/1.7 -apple-system,"PingFang SC",sans-serif}main{padding:28px 32px;max-width:1600px;margin:auto}header{display:flex;gap:24px;align-items:center}h1{font-size:20px;font-weight:500;margin:0}a{color:#bbb;margin-left:auto}nav{display:flex;gap:12px;margin:24px 0}button{background:none;border:0;border-bottom:1px solid transparent;color:#aaa;font:inherit;cursor:pointer;padding:8px 12px}button[aria-pressed=true]{color:white;border-color:#eee}.compare{display:flex;gap:36px;justify-content:center}.column>p{color:#bbb;margin:0 0 12px}.frame{position:relative;width:393px;height:852px;overflow:hidden;background:#030303}.reference img{position:absolute;max-width:none}iframe{width:100%;height:100%;border:0;display:block}.note{font-size:12px;color:#999;margin-top:24px}.wide .compare{display:block}.wide .column{margin-bottom:32px}.wide .frame{width:1280px;height:820px;max-width:100%}@media(max-width:880px){.compare{flex-direction:column;align-items:center}main{padding:20px 12px}.frame{max-width:calc(100vw - 24px)}header{align-items:start}header a{font-size:12px}}
+</style>
+<main><header><h1>设计稿 / 实际运行</h1><a href="./luminous.html">打开交互预览 ↗</a></header><nav><button data-scene="home">首页</button><button data-scene="recording">录音</button><button data-scene="playback">回放</button><button data-scene="desktop">桌面</button><button id="motion">冻结对照</button></nav><div class="compare"><div class="column"><p>原设计稿 · 裁去设备外框</p><div class="frame reference"><img alt="原设计稿"></div></div><div class="column"><p>运行画面 · HTML 控件 + WebGL 材质</p><div class="frame"><iframe title="实际运行预览"></iframe></div></div></div><p class="note">默认播放动画；点击“冻结对照”可比较材质基准帧的比例和构图。黑洞画面来自设计稿，运动由 WebGL 生成；不是全程序生成或可自由旋转的三维模型。预览控件没有连接真实录音。</p></main>
+<script type="module">
+import home from './src/luminous/artwork/home.png';
+import recording from './src/luminous/artwork/recording.png';
+import playback from './src/luminous/artwork/playback.png';
+import desktop from './src/luminous/artwork/desktop.png';
+const designs={home:{src:home,rect:[176,55,675,1415]},recording:{src:recording,rect:[151,55,721,1418]},playback:{src:playback,rect:[175,55,676,1415]},desktop:{src:desktop,rect:[32,67,1473,915]}};
+let scene='playback',motion=true;
+function render(){
+ const wide=scene==='desktop',design=designs[scene],width=wide?1280:393,height=wide?820:852;
+ const [x,y,w,h]=design.rect,scale=width/w,offset=wide?0:(height-h*scale)*.38;
+ document.body.classList.toggle('wide',wide);
+ const img=document.querySelector('.reference img'); img.src=design.src;img.style.width=`${(wide?1536:1024)*scale}px`;img.style.left=`${-x*scale}px`;img.style.top=`${-y*scale+offset}px`;
+ document.querySelector('iframe').src=`./luminous.html?embed=1&scene=${wide?'playback':scene}&layout=${wide?'wide':'phone'}${motion?'':'&time=0'}`;
+ document.querySelectorAll('[data-scene]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.scene===scene)));
+ document.querySelector('#motion').textContent=motion?'冻结对照':'播放动画';
+}
+document.querySelectorAll('[data-scene]').forEach(button=>button.onclick=()=>{scene=button.dataset.scene;render()});
+document.querySelector('#motion').onclick=()=>{motion=!motion;render()};
+render();
+</script></html>
