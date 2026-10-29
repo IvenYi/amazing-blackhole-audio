@@ -15,19 +15,23 @@ import { LUMINOUS_SCENES, type LuminousScene } from './scenes';
 export interface LuminousBlackHoleProps {
   scene?: LuminousScene;
   active?: boolean;
+  /** Drawing pixel-ratio ceiling. Native hosts may request their physical pixel ratio. */
+  dpr?: number;
+  /** Native page navigation can cut between compositions while reusing the renderer. */
+  transition?: boolean;
   motion?: 'ripple' | 'continuous' | 'flowing';
   /** Fixed shader time for screenshots; never used for normal animation. */
   deterministicTime?: number;
 }
 
 /** Visual-only prototype. No microphone, audio permissions, recording, or storage. */
-export default function LuminousBlackHole({ scene = 'home', active = true, motion = 'continuous', deterministicTime }: LuminousBlackHoleProps) {
+export default function LuminousBlackHole({ scene = 'home', active = true, dpr = 2, transition = true, motion = 'continuous', deterministicTime }: LuminousBlackHoleProps) {
   const root = useRef<HTMLDivElement>(null);
-  const settings = useRef({ scene, active, motion, deterministicTime });
+  const settings = useRef({ scene, active, dpr, transition, motion, deterministicTime });
   const wake = useRef<() => void>(() => {});
   const [error, setError] = useState(false);
-  settings.current = { scene, active, motion, deterministicTime };
-  useEffect(() => { wake.current(); }, [scene, active, motion, deterministicTime]);
+  settings.current = { scene, active, dpr, transition, motion, deterministicTime };
+  useEffect(() => { wake.current(); }, [scene, active, dpr, transition, motion, deterministicTime]);
 
   useEffect(() => {
     const element = root.current!;
@@ -88,7 +92,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
     let width = 0, height = 0, ratio = 0;
     let frameCount = 0;
     const resize = () => {
-      const w = Math.round(element.clientWidth), h = Math.round(element.clientHeight), dpr = Math.min(devicePixelRatio || 1, 2);
+      const w = Math.round(element.clientWidth), h = Math.round(element.clientHeight), dpr = Math.min(devicePixelRatio || 1, settings.current.dpr);
       if (w < 2 || h < 2) return false;
       if (w !== width || h !== height || ratio !== dpr) {
         width = w; height = h; ratio = dpr;
@@ -109,7 +113,7 @@ export default function LuminousBlackHole({ scene = 'home', active = true, motio
       last=now;
       const fixed=Number.isFinite(settings.current.deterministicTime);
       const target=LUMINOUS_SCENES[settings.current.scene];
-      const amount=reduced.matches||fixed||!settings.current.active?1:1-Math.exp(-dt/.48);
+      const amount=reduced.matches||fixed||!settings.current.active||!settings.current.transition?1:1-Math.exp(-dt/.48);
       let moving=false;
       for(const key of ['energy','speed'] as const) {
         shape[key]+=(target[key]-shape[key])*amount;
